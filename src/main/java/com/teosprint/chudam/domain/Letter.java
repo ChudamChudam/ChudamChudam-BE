@@ -2,7 +2,6 @@ package com.teosprint.chudam.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,9 +16,6 @@ public class Letter {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "letter_id")
     private Long id;
-
-    @Column(name = "letter_link")
-    private String letterLink;
 
     @Column(name = "letter_image_url")
     private String letterImageUrl;
