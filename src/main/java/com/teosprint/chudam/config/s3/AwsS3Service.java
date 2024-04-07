@@ -27,6 +27,36 @@ public class AwsS3Service {
 
     private final AmazonS3 amazonS3;
 
+    public AwsS3FileResponse uploadFile(MultipartFile multipartFile){
+        if(multipartFile==null|| multipartFile.isEmpty()){
+            throw new IllegalArgumentException("MultipartFile cannot be null or empty");
+        }
+
+        AwsS3FileResponse response = new AwsS3FileResponse(uploadToS3ReturnURL(multipartFile));
+        return response;
+    }
+
+    private String uploadToS3ReturnURL(MultipartFile file){
+        String UUIDFileName = createFileName(file.getOriginalFilename());
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(file.getSize());
+        objectMetadata.setContentType(file.getContentType());
+
+        try(InputStream inputStream = file.getInputStream()){
+            amazonS3.putObject(new PutObjectRequest(bucket, UUIDFileName, inputStream, objectMetadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+
+            log.info("파일 업로드 : [{}] to [{}] ", file.getOriginalFilename(), UUIDFileName);
+            return getS3FileURL(UUIDFileName);
+        } catch (IOException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
+        }
+    }
+
+    public String getS3FileURL(String hashedFileName) {
+        return amazonS3.getUrl(bucket, hashedFileName).toString();
+    }
+
     public String createFileName(String originalFileName){
         return UUID.randomUUID().toString().concat(getFileExtension(originalFileName));
     }
