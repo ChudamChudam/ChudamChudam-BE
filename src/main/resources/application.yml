@@ -18,7 +18,16 @@ spring:
       hibernate:
         format_sql: true
 
-
-
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: chudam-bucket
+      stack:
+        auto: false
 
 
