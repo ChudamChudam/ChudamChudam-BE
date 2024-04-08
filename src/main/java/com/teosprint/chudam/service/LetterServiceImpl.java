@@ -5,7 +5,10 @@ import com.teosprint.chudam.dto.AwsS3FileResponseDto;
 import com.teosprint.chudam.dto.CreateLetterRequestDto;
 import com.teosprint.chudam.dto.CreateLetterResponseDto;
 import com.teosprint.chudam.dto.LetterInfoResponseDto;
+import com.teosprint.chudam.exception.custom.AwsS3Exception;
 import com.teosprint.chudam.exception.custom.LetterCustomException;
+import com.teosprint.chudam.exception.errorcode.AwsS3ErrorCode;
+import com.teosprint.chudam.exception.errorcode.LetterErrorCode;
 import com.teosprint.chudam.repository.LetterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,11 +47,13 @@ public class LetterServiceImpl implements LetterService {
                 CreateLetterResponseDto createLetterResponseDto = CreateLetterResponseDto.from(letter.getId());
 
                 return createLetterResponseDto;
+            } else{
+                throw new AwsS3Exception(AwsS3ErrorCode.EMPTY_UPLOAD_FILE);
             }
         } catch (Exception e){
-            e.printStackTrace();
-            // 예외처리
+            log.error("편지 생성 중 오류 발생: {}", e.getMessage());
+            throw new LetterCustomException(LetterErrorCode.DOES_NOT_EXIST_LETTER);
         }
-        return null;
     }
+
 }
