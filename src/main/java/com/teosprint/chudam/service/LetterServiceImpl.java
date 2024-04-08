@@ -10,8 +10,10 @@ import com.teosprint.chudam.exception.custom.LetterCustomException;
 import com.teosprint.chudam.exception.errorcode.AwsS3ErrorCode;
 import com.teosprint.chudam.exception.errorcode.LetterErrorCode;
 import com.teosprint.chudam.repository.LetterRepository;
+import com.teosprint.chudam.util.Base64Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,7 +39,8 @@ public class LetterServiceImpl implements LetterService {
     @Override
     public CreateLetterResponseDto createLetter(CreateLetterRequestDto createLetterRequest) {
         try{
-            MultipartFile multipartFile = createLetterRequest.getLetterImage();
+            MultipartFile multipartFile = Base64Utils.convertBase64ToMultipartFile(createLetterRequest.getLetterImage());
+
             if(multipartFile != null){
                 AwsS3FileResponseDto response = awsS3Service.uploadFile(multipartFile);
                 Letter letter = letterRepository.save(Letter.createLetter(response.getUrl(), LocalDateTime.now()));
