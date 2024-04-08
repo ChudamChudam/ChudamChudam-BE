@@ -14,12 +14,12 @@ public enum AwsS3ErrorCode implements ErrorCode {
 
     @Override
     public HttpStatus getStatus() {
-        return null;
+        return this.httpStatus;
     }
 
     @Override
     public String getMessage() {
-        return message;
+        return this.message;
     }
 
 }
