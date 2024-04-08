@@ -10,5 +10,5 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 public class CreateLetterRequestDto {
 
-    private MultipartFile letterImage;
+    private String letterImage;
 }
