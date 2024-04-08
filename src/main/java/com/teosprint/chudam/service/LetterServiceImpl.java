@@ -52,7 +52,7 @@ public class LetterServiceImpl implements LetterService {
             }
         } catch (Exception e){
             log.error("편지 생성 중 오류 발생: {}", e.getMessage());
-            throw new LetterCustomException(LetterErrorCode.DOES_NOT_EXIST_LETTER);
+            throw new AwsS3Exception(AwsS3ErrorCode.EMPTY_UPLOAD_FILE);
         }
     }
 
